@@ -8,4 +8,6 @@ router.get('/profile/:username',protectedRoute,getUserProfile)
 router.post('/follow/:id',protectedRoute,followUnfollowUser)
 router.get('/suggest',protectedRoute,getsuggestedUsers)
 router.post('/update',protectedRoute,updateUser)
+
+
 module.exports=router
