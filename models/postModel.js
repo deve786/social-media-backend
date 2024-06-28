@@ -22,7 +22,7 @@ const postSchema = new moongose.Schema({
 
         }
     ],
-    comment: [
+    comments: [
         {
             text: {
                 type: String,
