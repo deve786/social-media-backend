@@ -5,6 +5,7 @@ const connectMongoDB = require('./db/dbConnect')
 const authRoutes=require('./routes/authRoutes')
 const userRoutes=require('./routes/userRoutes')
 const postRoutes=require('./routes/postRoutes')
+const notificationRoutes=require('./routes/notificationRoutes')
 const cookieParser = require('cookie-parser')
 const cloudinary = require("cloudinary").v2;
 
@@ -23,6 +24,7 @@ app.use(cookieParser())
 app.use('/api/auth', authRoutes)
 app.use('/api/user', userRoutes)
 app.use('/api/post', postRoutes)
+app.use('/api/notifications', notificationRoutes)
 
 
 
