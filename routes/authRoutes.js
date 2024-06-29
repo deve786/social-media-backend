@@ -1,14 +1,13 @@
-const express=require('express')
-const {  signup, signin, logout, getMe } = require('../controllers/authController')
-const { protectedRoute } = require('../middleware/protectedRoute')
-
-// create object of router
-const router=new express.Router()
+const express = require('express');
+const router = express.Router();
+const { signup, signin, logout, getMe } = require('../controllers/authController');
+const { protectedRoute } = require('../middleware/protectedRoute');
 
 
-router.get('/me',protectedRoute,getMe)
-router.post('/signup',signup)
-router.post('/signin',signin)
-router.post('/logout',logout)
 
-module.exports=router
+router.post('/signup', signup);
+router.post('/signin', signin);
+router.post('/logout', logout);
+router.get('/me', protectedRoute, getMe);
+
+module.exports = router;
