@@ -7,39 +7,34 @@ const cloudinary = require("cloudinary").v2;
 exports.createPost = async (req, res) => {
     try {
         const { text } = req.body;
-        let { img } = req.body;  // Assuming img is the URL returned from Cloudinary upload
-
         const userId = req.user._id.toString();
-
+    
         const user = await User.findById(userId);
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+          return res.status(404).json({ message: 'User not found' });
         }
-
-        if (!text && !img) {
-            return res.status(400).json({ error: 'Post must have text or image' });
+    
+        if (!text && !req.file) {
+          return res.status(400).json({ error: 'Post must have text or image' });
         }
-
-        if (img) {
-            // Upload image to Cloudinary if it's included in the request
-            const uploadedResponse = await cloudinary.uploader.upload(img);  // Uploads the image
-            img = uploadedResponse.secure_url;  // Retrieves the secure URL of the uploaded image
-        }
-
+    
+        const img = req.file ? req.file.path : null;
+    
         const newPost = new Post({
-            user: userId,
-            img,
-            text,
-              // Assign the secure URL to the img field
+          user: userId,
+          img,
+          text,
         });
-
+    
         await newPost.save();
         res.status(201).json(newPost);
-    } catch (error) {
+      } catch (error) {
         console.error('Error in create post', error);
         res.status(500).json({ error: 'Internal server error' });
-    }
+      }
+    
 };
+
 
 exports.getMyPosts = async (req, res) => {
     try {
