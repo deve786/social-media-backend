@@ -5,34 +5,38 @@ const cloudinary = require("cloudinary").v2;
 
 
 exports.createPost = async (req, res) => {
+    console.log("asd");
     try {
+        console.log('req.body:', req.body); // Add this line
+        console.log('req.file:', req.file); // Add this line
+
         const { text } = req.body;
         const userId = req.user._id.toString();
-    
+
         const user = await User.findById(userId);
+
         if (!user) {
-          return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ message: 'User not found' });
         }
-    
+
         if (!text && !req.file) {
-          return res.status(400).json({ error: 'Post must have text or image' });
+            return res.status(400).json({ error: 'Post must have text or image' });
         }
-    
+
         const img = req.file ? req.file.path : null;
-    
+
         const newPost = new Post({
-          user: userId,
-          img,
-          text,
+            user: userId,
+            img,
+            text,
         });
-    
+
         await newPost.save();
         res.status(201).json(newPost);
-      } catch (error) {
+    } catch (error) {
         console.error('Error in create post', error);
         res.status(500).json({ error: 'Internal server error' });
-      }
-    
+    }
 };
 
 
@@ -84,11 +88,9 @@ exports.deletePost = async (req, res) => {
 exports.commentPost = async (req, res) => {
     try {
         const { text } = req.body
-        console.log(text);
         const postId = req.params.id
-        console.log(postId);
         const userId = req.user._id
-        console.log(userId);
+        
         
 
         if (!text) {

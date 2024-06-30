@@ -81,10 +81,9 @@ exports.getSuggestedUsers = async (req, res) => {
 exports.updateUser = async (req, res) => {
     const { fullName, email, username, currentPassword, newPassword, bio } = req.body;
     const userId = req.user._id;
-    const profileImg = req.file?.filename;
-    // const coverImg = req.file?.filename; // Assuming the field name in req.body or req.file is coverImg
-    console.log(req.file);
-    
+    const profileImg = req.files['profileImg'] ? req.files['profileImg'][0].filename : null;
+    const coverImg = req.files['coverImg'] ? req.files['coverImg'][0].filename : null;
+
     try {
         let user = await User.findById(userId);
         if (!user) {
@@ -108,8 +107,8 @@ exports.updateUser = async (req, res) => {
         user.email = email || user.email;
         user.username = username || user.username;
         user.bio = bio || user.bio;
-        user.profileImg = profileImg || user.profileImg;
-        // user.coverImg = coverImg || user.coverImg; // Update coverImg field
+        if (profileImg) user.profileImg = profileImg;
+        if (coverImg) user.coverImg = coverImg;
 
         user = await user.save();
         user.password = null;
@@ -120,6 +119,8 @@ exports.updateUser = async (req, res) => {
         res.status(500).json({ error: "Internal server error" });
     }
 };
+
+
 exports.getFollowingList = async (req, res) => {
     try {
         const currentUser = await User.findById(req.user._id).populate('following', '-password');
