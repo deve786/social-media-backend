@@ -89,8 +89,11 @@ exports.deletePost = async (req, res) => {
 exports.commentPost = async (req, res) => {
     try {
         const { text } = req.body
+        console.log(text);
         const postId = req.params.id
+        console.log(postId);
         const userId = req.user._id
+        console.log(userId);
         
 
         if (!text) {

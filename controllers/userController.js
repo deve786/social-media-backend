@@ -104,7 +104,7 @@ exports.getsuggestedUsers = async (req, res) => {
 exports.updateUser = async (req, res) => {
     const { fullName, email, username, currentPassword, newPassword, bio } = req.body
     let { profileImg, coverImg } = req.body
-
+   
     const userId = req.user._id
 
     try {
@@ -127,7 +127,7 @@ exports.updateUser = async (req, res) => {
 
         }
         if (profileImg) {
-
+            console.log("image und" ,profileImg);
             if(user.profileImg){
                 await cloudinary.uploader.destroy(user.profileImg.split("/").pop().split(".")[0])
             }
