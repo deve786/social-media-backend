@@ -137,15 +137,24 @@ exports.getFollowingList = async (req, res) => {
 
 
 exports.getUsersSidBar = async (req, res) => {
-	try {
-		const loggedInUserId = req.user._id;
-        
+    try {
+        const loggedInUserId = req.user._id;
 
-		const filteredUsers = await User.find({ _id:{$ne:loggedInUserId} } )
-        
-		res.status(200).json(filteredUsers);
-	} catch (error) {
-		console.error("Error in getUsersForSidebar: ", error.message);
-		res.status(500).json({ error: "Internal server error" });
-	}
+        // Get the logged-in user's following list
+        const loggedInUser = await User.findById(loggedInUserId).select("following");
+
+        if (!loggedInUser) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        // Find users that the logged-in user is following, excluding the logged-in user
+        const filteredUsers = await User.find({ 
+            _id: { $in: loggedInUser.following, $ne: loggedInUserId } 
+        });
+
+        res.status(200).json(filteredUsers);
+    } catch (error) {
+        console.error("Error in getUsersForSidebar: ", error.message);
+        res.status(500).json({ error: "Internal server error" });
+    }
 };
