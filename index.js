@@ -26,7 +26,7 @@ app.use(express.json()); // to parse req.body
 app.use(express.urlencoded({ extended: true })); // to parse form data
 app.use(cookieParser());
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: 'https://social-media02.vercel.app',
     credentials: true
 }));
 
