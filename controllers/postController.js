@@ -5,10 +5,10 @@ const cloudinary = require("cloudinary").v2;
 
 
 exports.createPost = async (req, res) => {
-    console.log("asd");
+    // console.log("asd");
     try {
-        console.log('req.body:', req.body); // Add this line
-        console.log('req.file:', req.file); // Add this line
+        // console.log('req.body:', req.body); // Add this line
+        // console.log('req.file:', req.file); // Add this line
 
         const { text } = req.body;
         const userId = req.user._id.toString();

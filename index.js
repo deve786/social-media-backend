@@ -7,10 +7,11 @@ const connectMongoDB = require('./db/dbConnect');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const postRoutes = require('./routes/postRoutes');
+const messageRoutes = require('./routes/messageRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
+const { app, server } = require('./socket/socket');
 
-// Initialize app
-const app = express();
+
 dotenv.config();
 
 // Cloudinary configuration
@@ -36,11 +37,12 @@ app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/post', postRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use("/api/messages", messageRoutes);
 
 // Connect to MongoDB and start the server
 const PORT = process.env.PORT || 8000;
 connectMongoDB().then(() => {
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
         console.log(`Server running on port ${PORT}`);
     });
 }).catch(error => {
