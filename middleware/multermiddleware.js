@@ -1,34 +1,28 @@
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const multer = require("multer");
 
-// Ensure the upload directory exists
-const uploadDir = './uploads';
-if (!fs.existsSync(uploadDir)){
-  fs.mkdirSync(uploadDir);
+// store configuration
+const storage=multer.diskStorage({
+    destination:(req,file,callback)=>{
+        callback (null,'./uploads')
+    },
+    filename:(req,file,callback)=>{
+        callback(null,`image-${Date.now()}-${file.originalname}`)
+    }
+})
+
+// file filter option
+const fileFilter=(req,file,callback)=>{
+    if(file.mimetype=='image/jpg' || file.mimetype=='image/jpeg' || file.mimetype=='image/png'){
+        callback(null,true)
+    }else{
+        callback(null,false)
+    }
 }
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
-  },
-});
+// create middleware
 
-const fileFilter = (req, file, cb) => {
-  const ext = path.extname(file.originalname).toLowerCase();
-  if (ext !== '.jpg' && ext !== '.jpeg' && ext !== '.png') {
-    return cb(new Error('Only images are allowed'), false);
-  }
-  cb(null, true);
-};
+const upload=multer({
+    storage,fileFilter
+})
 
-const upload = multer({
-  storage,
-  fileFilter,
-  limits: { fileSize: 1024 * 1024 }, // 1MB
-});
-
-module.exports = upload;
+module.exports=upload
