@@ -1,4 +1,5 @@
 const Notification = require("../models/notificationModel");
+const Post = require("../models/postModel");
 const User = require("../models/userModel");
 const bcrypt = require('bcrypt');
 
@@ -64,11 +65,15 @@ exports.getSuggestedUsers = async (req, res) => {
         ]);
 
         const filteredUser = users.filter(user => !userFollowedMe.following.includes(user._id));
+        console.log(filteredUser);
         const suggestedUsers = filteredUser.slice(0, 4).map(user => ({
             _id: user._id,
             username: user.username,
             fullName: user.fullName,
-            profileImg: user.profileImg
+            profileImg: user.profileImg,
+            bio: user.bio,
+            followers: user.followers,
+            following: user.following,
         }));
 
         res.status(200).json(suggestedUsers);
@@ -144,15 +149,43 @@ exports.getUsersSidBar = async (req, res) => {
         const loggedInUser = await User.findById(loggedInUserId).select("following");
 
         if (!loggedInUser) {
-            return res.status(404).json({ error: "User not found" });
+            return res.status(404).json({ error: "User not founds" });
         }
 
         // Find users that the logged-in user is following, excluding the logged-in user
-        const filteredUsers = await User.find({ 
-            _id: { $in: loggedInUser.following, $ne: loggedInUserId } 
+        const filteredUsers = await User.find({
+            _id: { $in: loggedInUser.following, $ne: loggedInUserId }
         });
 
         res.status(200).json(filteredUsers);
+    } catch (error) {
+        console.error("Error in getUsersForSidebar: ", error.message);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+exports.getSingleUser = async (req, res) => {
+    try {
+        console.log("asdasd");
+        const loggedInUserId = req.params;
+        console.log(loggedInUserId);
+        // Get the logged-in user's following list
+        const user = await User.findById(req.params.id);
+        console.log(user);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.json(user);
+        // if (!user) {
+        //     return res.status(404).json({ error: "User not foundaa" });
+        // }
+
+        // Find users that the logged-in user is following, excluding the logged-in user
+        // const filteredUsers = await User.find({ 
+        //     _id: { $in: user.following, $ne: user } 
+        // });
+
+        // res.status(200).json(filteredUsers);
     } catch (error) {
         console.error("Error in getUsersForSidebar: ", error.message);
         res.status(500).json({ error: "Internal server error" });
