@@ -7,7 +7,7 @@ const postSchema = new mongoose.Schema({
         required: true
     },
     img: {
-        type: String, // Ensure it's defined as a String type
+        type: String,
     },
     text: {
         type: String,
@@ -25,7 +25,11 @@ const postSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
             required: true
-        }
+        },
+        likes: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+        }]
     }],
 }, { timestamps: true });
 
