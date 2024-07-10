@@ -15,6 +15,6 @@ router.delete("/:id",protectedRoute,deletePost)
 router.post("/comment/:id",protectedRoute,commentPost)
 router.post("/like/:id",protectedRoute,likeUnlikePost)
 router.post('/comment/like/:postId/:commentId', protectedRoute, likeUnlikeComment);
-router.delete('/comment/delete/:postId/:commentId', protectedRoute, deleteComment);
+router.delete('/comment/:postId/:commentId', protectedRoute, deleteComment);
 
 module.exports=router

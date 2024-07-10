@@ -208,35 +208,35 @@ exports.getUserPost = async (req, res) => {
 // Like/Unlike Comment
 exports.likeUnlikeComment = async (req, res) => {
     try {
-      const userId = req.user._id;
-      const { postId, commentId } = req.params;
-  
-      const post = await Post.findById(postId);
-      if (!post) {
-        return res.status(404).json({ error: "Post not found" });
-      }
-  
-      const comment = post.comments.id(commentId);
-      console.log("Comment ",comment);
-      if (!comment) {
-        return res.status(404).json({ error: "Comment not found" });
-      }
-  
-      const userLikedComment = comment.likes.includes(userId);
-  
-      if (userLikedComment) {
-        comment.likes.pull(userId);
-      } else {
-        comment.likes.push(userId);
-      }
-  
-      await post.save();
-      res.status(200).json({ message: "Successfully liked/unliked the comment", post });
+        const userId = req.user._id;
+        const { postId, commentId } = req.params;
+
+        const post = await Post.findById(postId);
+        if (!post) {
+            return res.status(404).json({ error: "Post not found" });
+        }
+
+        const comment = post.comments.id(commentId);
+        console.log("Comment ", comment);
+        if (!comment) {
+            return res.status(404).json({ error: "Comment not found" });
+        }
+
+        const userLikedComment = comment.likes.includes(userId);
+
+        if (userLikedComment) {
+            comment.likes.pull(userId);
+        } else {
+            comment.likes.push(userId);
+        }
+
+        await post.save();
+        res.status(200).json({ message: "Successfully liked/unliked the comment", post });
     } catch (error) {
-      console.error("Error in like/unlike comment:", error);
-      res.status(500).json({ error: "Internal server error" });
+        console.error("Error in like/unlike comment:", error);
+        res.status(500).json({ error: "Internal server error" });
     }
-  };
+};
 
 // Delete Comment
 exports.deleteComment = async (req, res) => {
@@ -258,12 +258,12 @@ exports.deleteComment = async (req, res) => {
             return res.status(401).json({ error: "You are not authorized to delete this comment" });
         }
 
-        comment.remove();
-        await post.save();
+        post.comments.pull(comment._id);
+        await post.save(); // Save the updated post without the deleted comment
 
         res.status(200).json({ message: "Comment deleted successfully" });
     } catch (error) {
-        console.log("Error in delete comment", error);
+        console.error("Error in delete comment:", error);
         res.status(500).json({ error: "Internal server error" });
     }
 };
