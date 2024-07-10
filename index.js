@@ -14,19 +14,14 @@ const { app, server } = require('./socket/socket');
 
 dotenv.config();
 
-// Cloudinary configuration
-cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_SECRET_KEY,
-});
+
 
 // Middleware
 app.use(express.json()); // to parse req.body
 app.use(express.urlencoded({ extended: true })); // to parse form data
 app.use(cookieParser());
 app.use(cors({
-    origin: 'https://social-media02.vercel.app',
+    origin: 'http://localhost:3000',
     credentials: true
 }));
 
