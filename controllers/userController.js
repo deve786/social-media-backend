@@ -169,25 +169,44 @@ exports.getSingleUser = async (req, res) => {
         console.log("asdasd");
         const loggedInUserId = req.params;
         console.log(loggedInUserId);
-        // Get the logged-in user's following list
+       
         const user = await User.findById(req.params.id);
         console.log(user);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
         res.json(user);
-        // if (!user) {
-        //     return res.status(404).json({ error: "User not foundaa" });
-        // }
-
-        // Find users that the logged-in user is following, excluding the logged-in user
-        // const filteredUsers = await User.find({ 
-        //     _id: { $in: user.following, $ne: user } 
-        // });
-
-        // res.status(200).json(filteredUsers);
+       
     } catch (error) {
         console.error("Error in getUsersForSidebar: ", error.message);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+
+exports.getAllUsers = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const Allusers = await User.find()
+        const users = await User.aggregate([
+            { $match: { _id: { $ne: userId } } },
+           
+        ]);
+
+       
+        const AllTheUsers = users.map(user => ({
+            _id: user._id,
+            username: user.username,
+            fullName: user.fullName,
+            profileImg: user.profileImg,
+            bio: user.bio,
+            followers: user.followers,
+            following: user.following,
+        }));
+
+        res.status(200).json(AllTheUsers);
+    } catch (error) {
+        console.error("Error in get all users", error.message);
         res.status(500).json({ error: "Internal server error" });
     }
 };

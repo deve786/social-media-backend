@@ -1,6 +1,6 @@
 const express = require('express');
 const { protectedRoute } = require('../middleware/protectedRoute');
-const { getUserProfile, followUnfollowUser, getSuggestedUsers, updateUser, getFollowingList, getUsersSidBar, getSingleUser } = require('../controllers/userController');
+const { getUserProfile, followUnfollowUser, getSuggestedUsers, updateUser, getFollowingList, getUsersSidBar, getSingleUser, getAllUsers } = require('../controllers/userController');
 const upload = require('../middleware/multermiddleware');
 
 const router = express.Router();
@@ -17,5 +17,6 @@ router.get('/following', protectedRoute, getFollowingList);
 
 router.get('/',protectedRoute,getUsersSidBar)
 router.get('/singleuser/:id',protectedRoute,getSingleUser)
+router.get('/allusers',protectedRoute,getAllUsers)
 
 module.exports = router;
