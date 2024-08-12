@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
+const cloudinary = require("cloudinary").v2;
 const cors = require('cors');
 const connectMongoDB = require('./db/dbConnect');
 const authRoutes = require('./routes/authRoutes');
