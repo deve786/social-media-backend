@@ -1,7 +1,6 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
-const cloudinary = require("cloudinary").v2;
 const cors = require('cors');
 const connectMongoDB = require('./db/dbConnect');
 const authRoutes = require('./routes/authRoutes');
@@ -21,7 +20,7 @@ app.use(express.json()); // to parse req.body
 app.use(express.urlencoded({ extended: true })); // to parse form data
 app.use(cookieParser());
 app.use(cors({
-    origin: 'https://social-media-backend-black.vercel.app',
+    origin: 'https://social-media02.vercel.app',
     credentials: true
 }));
 
