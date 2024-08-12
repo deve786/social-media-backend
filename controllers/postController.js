@@ -217,7 +217,7 @@ exports.likeUnlikeComment = async (req, res) => {
         }
 
         const comment = post.comments.id(commentId);
-        console.log("Comment ", comment);
+       
         if (!comment) {
             return res.status(404).json({ error: "Comment not found" });
         }
@@ -258,8 +258,11 @@ exports.deleteComment = async (req, res) => {
             return res.status(401).json({ error: "You are not authorized to delete this comment" });
         }
 
-        post.comments.pull(comment._id);
-        await post.save(); // Save the updated post without the deleted comment
+        // Use MongoDB's $pull operator to remove the comment
+        await Post.updateOne(
+            { _id: postId },
+            { $pull: { comments: { _id: commentId } } }
+        );
 
         res.status(200).json({ message: "Comment deleted successfully" });
     } catch (error) {

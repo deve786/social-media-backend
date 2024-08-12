@@ -65,7 +65,7 @@ exports.getSuggestedUsers = async (req, res) => {
         ]);
 
         const filteredUser = users.filter(user => !userFollowedMe.following.includes(user._id));
-        console.log(filteredUser);
+        
         const suggestedUsers = filteredUser.slice(0, 4).map(user => ({
             _id: user._id,
             username: user.username,
@@ -166,12 +166,12 @@ exports.getUsersSidBar = async (req, res) => {
 
 exports.getSingleUser = async (req, res) => {
     try {
-        console.log("asdasd");
+        
         const loggedInUserId = req.params;
-        console.log(loggedInUserId);
+       
        
         const user = await User.findById(req.params.id);
-        console.log(user);
+       
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
